@@ -1,10 +1,13 @@
 package main
 
 import (
+	"backend/controllers"
 	"backend/database"
+	"backend/entity"
 	"log"
 	"net/http"
 	"os"
+	"path/filepath"
 
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
@@ -13,16 +16,17 @@ import (
 
 func main() {
 	initDB()
+	initStorage()
 
 	router := mux.NewRouter().StrictSlash(true)
-	// initaliseHandlers(router)
+	initaliseHandlers(router)
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "9000" // Default port if not specified
 	}
 
 	c := cors.New(cors.Options{
-		AllowedOrigins:   []string{"http://localhost:8080"},
+		AllowedOrigins:   []string{"http://localhost:3000"},
 		AllowCredentials: true,
 	})
 
@@ -34,7 +38,8 @@ func main() {
 
 func initaliseHandlers(router *mux.Router) {
 	// router.HandleFunc("/penyakit/create", controllers.CreatePenyakit).Methods("POST")
-
+	router.HandleFunc("/clustering", controllers.HandleNewClustering).Methods("POST")
+	router.HandleFunc("/clustering", controllers.HandleGetLogs).Methods("GET")
 }
 
 func initDB() {
@@ -55,8 +60,19 @@ func initDB() {
 	if err != nil {
 		panic(err.Error())
 	}
-	// database.MigratePenyakit(&entity.Penyakit{})
+	database.MigrateLog(&entity.Log{})
 	// database.MigratePemeriksaan(&entity.Pemeriksaan{})
+}
+
+func initStorage() {
+	dir, _ := os.Getwd()
+	resultPath := filepath.Join(dir, "results")
+	os.RemoveAll(resultPath)
+	uploadPath := filepath.Join(dir, "uploads")
+	os.RemoveAll(uploadPath)
+	os.MkdirAll(resultPath, 0700)
+	os.MkdirAll(uploadPath, 0700)
+	log.Println("Storage initialized")
 }
 
 // func main() {

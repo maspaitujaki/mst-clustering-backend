@@ -1,6 +1,7 @@
 package database
 
 import (
+	"backend/entity"
 	"log"
 
 	"gorm.io/driver/postgres"
@@ -20,10 +21,11 @@ func Connect(connectionString string) error {
 	return nil
 }
 
-// func MigratePenyakit(table *entity.Penyakit) {
-// 	Connector.AutoMigrate(&table)
-// 	log.Println("Migrated table penyakit")
-// }
+func MigrateLog(table *entity.Log) {
+	Connector.AutoMigrate(&table)
+	Connector.Session(&gorm.Session{AllowGlobalUpdate: true}).Delete(&table)
+	log.Println("Migrated table Log")
+}
 
 // func MigratePemeriksaan(table *entity.Pemeriksaan) {
 // 	Connector.AutoMigrate(&table)

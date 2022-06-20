@@ -2,7 +2,6 @@ package visualisasi
 
 import (
 	"backend/mst"
-	"fmt"
 	"log"
 	"math"
 	"os"
@@ -15,13 +14,13 @@ import (
 	"gonum.org/v1/plot/vg/vgimg"
 )
 
-func MakeScatter(xAtr string, yAtr string, clusters [][]mst.Node) {
+func MakeScatter(xAtr string, yAtr string, clusters [][]mst.Node, filePath string) {
 
-	for j, cluster := range clusters {
-		for _, Node := range cluster {
-			fmt.Printf("%s X:%f Y:%f CLUSTER:%d\n", Node.Name, Node.X, Node.Y, j)
-		}
-	}
+	// for j, cluster := range clusters {
+	// 	for _, Node := range cluster {
+	// 		fmt.Printf("%s X:%f Y:%f CLUSTER:%d\n", Node.Name, Node.X, Node.Y, j)
+	// 	}
+	// }
 
 	// randomTriples returns some random but correlated x, y, z triples
 	mapTriples := func(clusters [][]mst.Node) plotter.XYZs {
@@ -47,9 +46,9 @@ func MakeScatter(xAtr string, yAtr string, clusters [][]mst.Node) {
 		}
 	}
 
-	for _, data := range scatterData {
-		fmt.Println(data.X, data.Y, data.Z)
-	}
+	// for _, data := range scatterData {
+	// 	fmt.Println(data.X, data.Y, data.Z)
+	// }
 
 	colors := moreland.Kindlmann() // Initialize a color map.
 	colors.SetMax(maxZ + 1)
@@ -81,7 +80,7 @@ func MakeScatter(xAtr string, yAtr string, clusters [][]mst.Node) {
 
 	a, b, c, d := sc.DataRange()
 
-	fmt.Println(a, b, c, d)
+	// fmt.Println(a, b, c, d)
 
 	p.X.Min = a
 	p.X.Max = b
@@ -119,7 +118,7 @@ func MakeScatter(xAtr string, yAtr string, clusters [][]mst.Node) {
 	dc = draw.Crop(dc, 0, -legendWidth, 0, 0) // Make space for the legend.
 	p.Draw(dc)
 
-	w, err := os.Create("testdata/scatterColor.png")
+	w, err := os.Create(filePath)
 	if err != nil {
 		log.Panic(err)
 	}
