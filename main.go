@@ -40,6 +40,8 @@ func initaliseHandlers(router *mux.Router) {
 	// router.HandleFunc("/penyakit/create", controllers.CreatePenyakit).Methods("POST")
 	router.HandleFunc("/clustering", controllers.HandleNewClustering).Methods("POST")
 	router.HandleFunc("/clustering", controllers.HandleGetLogs).Methods("GET")
+	router.HandleFunc("/clustering/{id}", controllers.HandleGetLogById).Methods("GET")
+	router.HandleFunc("/clustering/img/{id}", controllers.HandleGetImgById).Methods("GET")
 }
 
 func initDB() {
